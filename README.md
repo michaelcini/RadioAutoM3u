@@ -34,3 +34,4 @@ flutter run
 
 ## Notes on Car App Library
 A full Car App Library (AndroidX `car-app` library) requires native Android modules and manifest entries; this project includes an Android Auto-compatible MediaBrowserService path (recommended) and `automotive_app_desc.xml`. For most media apps this is sufficient to appear in Android Auto. If you need a separate `car-app` module for the new Car App Library UI, I can also add a native Android module skeleton (Kotlin) that demonstrates it.
+# Test
