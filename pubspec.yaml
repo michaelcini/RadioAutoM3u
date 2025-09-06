@@ -1,0 +1,34 @@
+name: radio_auto_m3u
+description: Flutter radio app with Android Auto support (m3u playlists + stations)
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  audio_service: ^0.18.18
+  just_audio: ^0.9.39
+  just_audio_background: ^0.0.1-beta.11
+  audio_session: ^0.1.21
+  rxdart: ^0.27.7
+  http: ^1.2.2
+  shared_preferences: ^2.2.3
+  collection: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icons/ic_launcher.png
+    - assets/stations/
