@@ -14,7 +14,7 @@ dependencies:
   # Audio & background playback
   just_audio: ^0.9.36
   audio_service: ^0.18.12
-  just_audio_background: ^0.0.1
+  just_audio_background: ^0.0.1-beta.15
 
   # Storage & networking
   shared_preferences: ^2.2.2
