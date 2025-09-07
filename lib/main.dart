@@ -41,7 +41,7 @@ class RadioApp extends StatefulWidget {
 
 class _RadioAppState extends State<RadioApp> {
   late final StationsRepository repo;
-  List<Station> stations = [];
+  List<Station> stations = await repo.loadStations("https://vibefm.radioca.st/vibe_live");
 
   final _linkCtrl = TextEditingController();
 
