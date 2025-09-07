@@ -10,13 +10,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04   # Standard Ubuntu runner with sudo, git, tar preinstalled
+    runs-on: ubuntu-22.04   # Standard Ubuntu runner with tar, git, sudo preinstalled
 
     env:
       PATH: ${{ github.workspace }}/flutter/bin:$PATH
 
     steps:
-      # 1️⃣ Checkout repository using Git clone (avoids REST API archive issues)
+      # 1️⃣ Checkout repository using Git clone (avoids REST API tar extraction)
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
@@ -26,13 +26,13 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y curl unzip xz-utils git
 
-      # 3️⃣ Download Flutter SDK (Flutter 3.13.1 matches Dart 3.3.0)
+      # 3️⃣ Download Flutter SDK (Flutter 3.13.1 for Dart 3.3.0)
       - name: Download Flutter
         run: |
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.1-stable.tar.xz
           tar -xf flutter_linux_3.13.1-stable.tar.xz
 
-      # 4️⃣ Verify Flutter & Dart
+      # 4️⃣ Verify Flutter & Dart versions
       - name: Flutter version
         run: flutter --version
 
@@ -48,7 +48,7 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      # 8️⃣ Upload APK artifact
+      # 8️⃣ Upload APK as artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
