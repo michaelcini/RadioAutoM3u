@@ -36,7 +36,7 @@ class _StationsPageState extends State<StationsPage> {
   @override
   void initState() {
     super.initState();
-    stationsFuture = repo.loadStations(); // returns Future<List<Station>>
+    stationsFuture = repo.loadStations();
   }
 
   void _importM3U(String content) async {
@@ -89,12 +89,12 @@ class _StationsPageState extends State<StationsPage> {
               final station = stations[index];
               return ListTile(
                 leading: station.logo != null
-                    ? Image.network(station.logo!, width: 40, height: 40, errorBuilder: (_, __, ___) => const Icon(Icons.radio))
+                    ? Image.network(station.logo!,
+                        width: 40, height: 40, errorBuilder: (_, __, ___) => const Icon(Icons.radio))
                     : const Icon(Icons.radio),
                 title: Text(station.name),
                 subtitle: Text(station.url),
                 onTap: () {
-                  // TODO: connect with player later
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Would play: ${station.name}")),
                   );
@@ -106,11 +106,54 @@ class _StationsPageState extends State<StationsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {
-          // TODO: Hook with file picker / text input to import m3u/pls/opml
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Import feature coming soon")),
+        onPressed: () async {
+          final controller = TextEditingController();
+          final result = await showDialog<String>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Paste Playlist (M3U/PLS/OPML)"),
+                content: TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    hintText: "Paste playlist content here",
+                  ),
+                  maxLines: 10,
+                ),
+                actions: [
+                  TextButton(
+                    child: const Text("Cancel"),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  TextButton(
+                    child: const Text("Import as M3U"),
+                    onPressed: () => Navigator.pop(context, "m3u"),
+                  ),
+                  TextButton(
+                    child: const Text("Import as PLS"),
+                    onPressed: () => Navigator.pop(context, "pls"),
+                  ),
+                  TextButton(
+                    child: const Text("Import as OPML"),
+                    onPressed: () => Navigator.pop(context, "opml"),
+                  ),
+                ],
+              );
+            },
           );
+
+          if (result != null) {
+            final text = controller.text.trim();
+            if (text.isNotEmpty) {
+              if (result == "m3u") {
+                _importM3U(text);
+              } else if (result == "pls") {
+                _importPLS(text);
+              } else if (result == "opml") {
+                _importOPML(text);
+              }
+            }
+          }
         },
       ),
     );
