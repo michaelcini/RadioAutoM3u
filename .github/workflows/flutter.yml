@@ -12,28 +12,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      PATH: ${{ github.workspace }}/flutter/bin:$PATH  # Persist Flutter in PATH
+      PATH: ${{ github.workspace }}/flutter/bin:$PATH  # persist Flutter in all steps
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 1️⃣ Install required tools
-      - name: Install required tools
-        run: sudo apt-get update && sudo apt-get install -y unzip curl git xz-utils tar
+      # 1️⃣ Install required tools (including tar)
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl git unzip xz-utils tar
 
       # 2️⃣ Download Flutter SDK manually
       - name: Download Flutter SDK
         run: |
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.1-stable.tar.xz
-          tar xf flutter_linux_3.13.1-stable.tar.xz
+          tar -xf flutter_linux_3.13.1-stable.tar.xz
 
-      # 3️⃣ Verify Flutter version
+      # 3️⃣ Confirm Flutter & Dart versions
       - name: Flutter and Dart versions
         run: flutter --version
 
-      # 4️⃣ Get Flutter dependencies
-      - name: Get dependencies
+      # 4️⃣ Get dependencies
+      - name: Get Flutter dependencies
         run: flutter pub get
 
       # 5️⃣ Clean previous builds
