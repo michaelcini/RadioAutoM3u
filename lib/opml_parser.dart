@@ -12,7 +12,12 @@ List<Station> parseOPML(String content) {
     if (url != null) {
       final id = url;
       try {
-        stations.add(Station(id: id, name: title ?? id, url: Uri.parse(url)));
+        stations.add(Station(
+  id: someId,
+  name: someName,
+  url: someUri.toString(),
+  logo: someLogo,
+);
       } catch (_) {}
     }
   }
