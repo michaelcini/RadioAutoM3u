@@ -1,34 +1,35 @@
-
-import 'package:just_audio/just_audio.dart';
+import 'package:audio_service/audio_service.dart';
 
 class Station {
-  final String id;
   final String name;
-  final Uri url;
-  final String? logo;
+  final String url;
 
-  const Station({required this.id, required this.name, required this.url, this.logo});
+  Station({
+    required this.name,
+    required this.url,
+  });
 
-  factory Station.fromMediaItem(MediaItem item) {
-    return Station(
-      id: item.id,
-      name: item.title,
-      url: Uri.parse(item.id),
-      logo: item.artUri?.toString(),
-    );
-  }
-
+  /// Convert a station into a MediaItem for audio_service
   MediaItem toMediaItem() {
     return MediaItem(
-      id: url.toString(),
+      id: url,
       title: name,
-      artUri: logo != null ? Uri.parse(logo!) : null,
-      album: "Radio",
-      extras: {"isLiveStream": true},
     );
   }
 
-  Station copyWith({String? name, Uri? url, String? logo}) {
-    return Station(id: id, name: name ?? this.name, url: url ?? this.url, logo: logo ?? this.logo);
+  /// Convert Station to Map (useful for saving with SharedPreferences / JSON)
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'url': url,
+    };
+  }
+
+  /// Create Station from Map
+  factory Station.fromJson(Map<String, dynamic> json) {
+    return Station(
+      name: json['name'] as String,
+      url: json['url'] as String,
+    );
   }
 }
