@@ -2,31 +2,30 @@ import 'models.dart';
 
 class PlsParser {
   List<Station> parse(String content) {
-    final List<Station> stations = [];
     final lines = content.split("\n");
+    final List<Station> stations = [];
 
-    String? currentName;
-    String? currentUrl;
+    String? name;
+    String? url;
 
     for (final line in lines) {
       final trimmed = line.trim();
-      if (trimmed.startsWith("Title")) {
-        currentName = trimmed.split("=").last.trim();
-      } else if (trimmed.startsWith("File")) {
-        currentUrl = trimmed.split("=").last.trim();
+      if (trimmed.isEmpty) continue;
 
-        if (currentUrl.isNotEmpty) {
-          stations.add(
-            Station(
-              id: currentUrl,
-              name: currentName ?? "Unnamed",
-              url: currentUrl,
-              logo: null,
-            ),
-          );
-          currentName = null;
-          currentUrl = null;
+      if (trimmed.toLowerCase().startsWith("title")) {
+        name = trimmed.split("=").last.trim();
+      } else if (trimmed.toLowerCase().startsWith("file")) {
+        url = trimmed.split("=").last.trim();
+        if (url.isNotEmpty) {
+          stations.add(Station(
+            id: url,
+            name: name ?? "Unnamed",
+            url: url,
+            logo: null,
+          ));
         }
+        name = null;
+        url = null;
       }
     }
 
