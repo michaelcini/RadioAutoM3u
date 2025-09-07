@@ -13,31 +13,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/upload-artifact@v4
+      # 1️⃣ Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Install Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.13.1' # Set your Flutter SDK version
+      # 2️⃣ Install Flutter
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.1'  # Match your SDK constraints
 
-    - name: Enable flutter cache
-      run: flutter pub get
+      # 3️⃣ Get dependencies
+      - name: Get Flutter dependencies
+        run: flutter pub get
 
-    - name: Run Flutter doctor
-      run: flutter doctor
+      # 4️⃣ Clean previous builds
+      - name: Clean build
+        run: flutter clean
 
-    - name: Get dependencies
-      run: flutter pub get
+      # 5️⃣ Build release APK
+      - name: Build APK (release)
+        run: flutter build apk --release
 
-    - name: Clean previous builds
-      run: flutter clean
-
-    - name: Build APK (release)
-      run: flutter build apk --release
-
-    - name: Upload APK as artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: radio_auto_m3u-release-apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+      # 6️⃣ Upload APK as artifact (v4)
+      - name: Upload APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: radio_auto_m3u-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
