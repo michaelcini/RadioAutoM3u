@@ -17,12 +17,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Install Flutter (latest stable, Dart >=3.3)
+      # 2️⃣ Install Flutter (explicit stable version with Dart >=3.3)
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
-          flutter-version: 'latest'
+          flutter-version: '3.13.1'  # explicit version required
 
       # 3️⃣ Display Flutter & Dart versions
       - name: Flutter and Dart versions
