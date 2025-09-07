@@ -20,7 +20,12 @@ List<Station> parsePLS(String content) {
   for (final idx in files.keys) {
     final url = files[idx]!;
     final name = titles[idx] ?? url;
-    stations.add(Station(id: url, name: name, url: Uri.parse(url)));
+    stations.add(Station(
+  id: someId,
+  name: someName,
+  url: someUri.toString(),
+  logo: someLogo,
+);
   }
   return stations;
 }
