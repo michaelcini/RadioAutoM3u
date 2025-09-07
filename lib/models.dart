@@ -1,10 +1,8 @@
-import 'package:audio_service/audio_service.dart';
-
 class Station {
   final String id;
   final String name;
   final String url;
-  final String? logo; // optional logo
+  final String? logo;
 
   Station({
     required this.id,
@@ -13,11 +11,12 @@ class Station {
     this.logo,
   });
 
-  MediaItem toMediaItem() {
-    return MediaItem(
-      id: id,
-      title: name,
-      artUri: logo != null ? Uri.parse(logo!) : null,
+  factory Station.fromJson(Map<String, dynamic> json) {
+    return Station(
+      id: json['id'],
+      name: json['name'],
+      url: json['url'],
+      logo: json['logo'],
     );
   }
 
@@ -28,14 +27,5 @@ class Station {
       'url': url,
       'logo': logo,
     };
-  }
-
-  factory Station.fromJson(Map<String, dynamic> json) {
-    return Station(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      url: json['url'] as String,
-      logo: json['logo'] as String?,
-    );
   }
 }
