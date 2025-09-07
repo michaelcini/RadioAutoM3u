@@ -1,29 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:audio_service/audio_service.dart';
+import 'audio_handler.dart';
 import 'models.dart';
 import 'stations_repository.dart';
 import 'm3u_parser.dart';
 import 'pls_parser.dart';
 import 'opml_parser.dart';
 
-void main() {
-  runApp(const RadioApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Start the AudioService with our handler
+  final audioHandler = await AudioService.init(
+    builder: () => RadioAudioHandler(),
+    config: const AudioServiceConfig(
+      androidNotificationChannelId: 'com.radio_auto_m3u.channel',
+      androidNotificationChannelName: 'RadioAutoM3U',
+      androidNotificationOngoing: true,
+    ),
+  );
+
+  runApp(RadioApp(audioHandler: audioHandler));
 }
 
 class RadioApp extends StatelessWidget {
-  const RadioApp({super.key});
+  final RadioAudioHandler audioHandler;
+  const RadioApp({super.key, required this.audioHandler});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'RadioAutoM3U',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const StationsPage(),
+      home: StationsPage(audioHandler: audioHandler),
     );
   }
 }
 
 class StationsPage extends StatefulWidget {
-  const StationsPage({super.key});
+  final RadioAudioHandler audioHandler;
+  const StationsPage({super.key, required this.audioHandler});
 
   @override
   State<StationsPage> createState() => _StationsPageState();
@@ -89,14 +105,20 @@ class _StationsPageState extends State<StationsPage> {
               final station = stations[index];
               return ListTile(
                 leading: station.logo != null
-                    ? Image.network(station.logo!,
-                        width: 40, height: 40, errorBuilder: (_, __, ___) => const Icon(Icons.radio))
+                    ? Image.network(
+                        station.logo!,
+                        width: 40,
+                        height: 40,
+                        errorBuilder: (_, __, ___) => const Icon(Icons.radio),
+                      )
                     : const Icon(Icons.radio),
                 title: Text(station.name),
                 subtitle: Text(station.url),
-                onTap: () {
+                onTap: () async {
+                  // Play station using the audio handler
+                  await widget.audioHandler.playStation(station);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Would play: ${station.name}")),
+                    SnackBar(content: Text("Playing: ${station.name}")),
                   );
                 },
               );
