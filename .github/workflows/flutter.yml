@@ -11,43 +11,34 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PATH: ${{ github.workspace }}/flutter/bin:$PATH  # Persist Flutter in PATH
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 1️⃣ Install dependencies
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y unzip curl git xz-utils
 
-      # 2️⃣ Download Flutter 3.13.1 manually
       - name: Download Flutter SDK
         run: |
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.1-stable.tar.xz
           tar xf flutter_linux_3.13.1-stable.tar.xz
-          export PATH="$PWD/flutter/bin:$PATH"
-          flutter --version
 
-      # 3️⃣ Enable flutter & get dependencies
+      - name: Verify Flutter version
+        run: flutter --version  # Now uses the downloaded 3.13.1 Flutter
+
       - name: Get Flutter dependencies
-        run: |
-          export PATH="$PWD/flutter/bin:$PATH"
-          flutter pub get
+        run: flutter pub get
 
-      # 4️⃣ Clean previous builds
       - name: Clean build
-        run: |
-          export PATH="$PWD/flutter/bin:$PATH"
-          flutter clean
+        run: flutter clean
 
-      # 5️⃣ Build release APK
-      - name: Build APK (release)
-        run: |
-          export PATH="$PWD/flutter/bin:$PATH"
-          flutter build apk --release
+      - name: Build release APK
+        run: flutter build apk --release
 
-      # 6️⃣ Upload APK as artifact
-      - name: Upload APK
+      - name: Upload APK as artifact
         uses: actions/upload-artifact@v4
         with:
           name: radio_auto_m3u-release-apk
