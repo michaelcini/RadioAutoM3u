@@ -1,35 +1,41 @@
 import 'package:audio_service/audio_service.dart';
 
 class Station {
+  final String id;
   final String name;
   final String url;
+  final String? logo; // optional logo
 
   Station({
+    required this.id,
     required this.name,
     required this.url,
+    this.logo,
   });
 
-  /// Convert a station into a MediaItem for audio_service
   MediaItem toMediaItem() {
     return MediaItem(
-      id: url,
+      id: id,
       title: name,
+      artUri: logo != null ? Uri.parse(logo!) : null,
     );
   }
 
-  /// Convert Station to Map (useful for saving with SharedPreferences / JSON)
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'url': url,
+      'logo': logo,
     };
   }
 
-  /// Create Station from Map
   factory Station.fromJson(Map<String, dynamic> json) {
     return Station(
+      id: json['id'] as String,
       name: json['name'] as String,
       url: json['url'] as String,
+      logo: json['logo'] as String?,
     );
   }
 }
