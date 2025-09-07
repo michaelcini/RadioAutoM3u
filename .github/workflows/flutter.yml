@@ -1,7 +1,9 @@
-name: Build Flutter APK
+name: Flutter CI
 
 on:
   push:
+    branches: [ "main" ]
+  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -10,15 +12,28 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'   # latest stable
+          channel: stable
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            build
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Analyze project
+        run: flutter analyze
 
       - name: Build release APK
         run: flutter build apk --release
@@ -26,5 +41,11 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: RadioAutoM3U
+          name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Save pubspec.lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: pubspec-lock
+          path: pubspec.lock
