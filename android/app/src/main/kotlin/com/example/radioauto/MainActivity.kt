@@ -1,6 +1,6 @@
+package com.example.radio_auto_m3u
 
-package com.example.radioauto
+import io.flutter.embedding.android.FlutterActivity
 
-import com.ryanheise.audioservice.AudioServiceActivity
-
-class MainActivity: AudioServiceActivity()
+class MainActivity: FlutterActivity() {
+}
