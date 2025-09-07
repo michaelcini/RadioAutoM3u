@@ -22,7 +22,7 @@ dependencies:
   xml: 6.3.0
 
   # Utilities
-  collection: 1.18.0
+  collection: 1.19.1
 
 dev_dependencies:
   flutter_test:
