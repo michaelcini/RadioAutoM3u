@@ -12,42 +12,44 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     env:
-      PATH: ${{ github.workspace }}/flutter/bin:$PATH  # persist Flutter path
+      PATH: ${{ github.workspace }}/flutter/bin:$PATH
 
     steps:
-      # 1️⃣ Checkout repository using Git (avoids tar issues)
+      # ✅ Checkout using Git to avoid tar dependency
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # full Git clone
+          repository: michaelcini/RadioAutoM3u
+          ref: main
+          fetch-depth: 0
 
-      # 2️⃣ Install required tools
+      # Install required tools
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y curl git unzip xz-utils
 
-      # 3️⃣ Download Flutter SDK manually
+      # Download Flutter
       - name: Download Flutter SDK
         run: |
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.1-stable.tar.xz
           tar -xf flutter_linux_3.13.1-stable.tar.xz
 
-      # 4️⃣ Verify Flutter & Dart versions
-      - name: Flutter and Dart versions
+      # Verify Flutter
+      - name: Flutter version
         run: flutter --version
 
-      # 5️⃣ Get Flutter dependencies
+      # Get dependencies
       - name: Get dependencies
         run: flutter pub get
 
-      # 6️⃣ Clean previous builds
+      # Clean previous builds
       - name: Clean build
         run: flutter clean
 
-      # 7️⃣ Build release APK
-      - name: Build APK (release)
+      # Build APK
+      - name: Build APK
         run: flutter build apk --release
 
-      # 8️⃣ Upload APK as artifact
+      # Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
