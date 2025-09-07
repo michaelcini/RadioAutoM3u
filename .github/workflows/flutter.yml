@@ -15,41 +15,39 @@ jobs:
       PATH: ${{ github.workspace }}/flutter/bin:$PATH
 
     steps:
-      # ✅ Checkout using Git to avoid tar dependency
+      # 1️⃣ Checkout repository using Git clone (avoids tar issues)
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          repository: michaelcini/RadioAutoM3u
-          ref: main
           fetch-depth: 0
 
-      # Install required tools
+      # 2️⃣ Install required dependencies
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y curl git unzip xz-utils
 
-      # Download Flutter
+      # 3️⃣ Download Flutter SDK manually
       - name: Download Flutter SDK
         run: |
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.1-stable.tar.xz
           tar -xf flutter_linux_3.13.1-stable.tar.xz
 
-      # Verify Flutter
-      - name: Flutter version
+      # 4️⃣ Verify Flutter & Dart versions
+      - name: Flutter and Dart versions
         run: flutter --version
 
-      # Get dependencies
-      - name: Get dependencies
+      # 5️⃣ Get dependencies
+      - name: Get Flutter dependencies
         run: flutter pub get
 
-      # Clean previous builds
+      # 6️⃣ Clean previous builds
       - name: Clean build
         run: flutter clean
 
-      # Build APK
-      - name: Build APK
+      # 7️⃣ Build release APK
+      - name: Build APK (release)
         run: flutter build apk --release
 
-      # Upload APK
+      # 8️⃣ Upload APK artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
