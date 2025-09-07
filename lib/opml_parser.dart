@@ -1,25 +1,27 @@
-
-import 'package:xml/xml.dart' as xml;
+import 'package:xml/xml.dart';
 import 'models.dart';
 
-List<Station> parseOPML(String content) {
-  final doc = xml.XmlDocument.parse(content);
-  final outlines = doc.findAllElements('outline');
-  final stations = <Station>[];
-  for (final o in outlines) {
-    final url = o.getAttribute('xmlUrl') ?? o.getAttribute('url');
-    final title = o.getAttribute('text') ?? o.getAttribute('title') ?? url;
-    if (url != null) {
-      final id = url;
-      try {
-        stations.add(Station(
-  id: someId,
-  name: someName,
-  url: someUri.toString(),
-  logo: someLogo,
-);
-      } catch (_) {}
+class OpmlParser {
+  List<Station> parse(String content) {
+    final document = XmlDocument.parse(content);
+    final List<Station> stations = [];
+
+    for (final outline in document.findAllElements('outline')) {
+      final title = outline.getAttribute('title') ?? outline.getAttribute('text');
+      final url = outline.getAttribute('xmlUrl') ?? outline.getAttribute('url');
+
+      if (url != null) {
+        stations.add(
+          Station(
+            id: url,
+            name: title ?? "Unnamed",
+            url: url,
+            logo: null,
+          ),
+        );
+      }
     }
+
+    return stations;
   }
-  return stations;
 }
