@@ -38,7 +38,12 @@ M3uParseResult parseM3U(String content) {
       final url = Uri.tryParse(line);
       if (url != null && (url.hasScheme || line.startsWith('http'))) {
         final name = pendingName ?? line;
-        stations.add(Station(id: line, name: name, url: url, logo: pendingLogo));
+        stations.add(Station(
+  id: someId,
+  name: someName,
+  url: someUri.toString(),
+  logo: someLogo,
+);
       }
       pendingName = null;
       pendingLogo = null;
